@@ -39,7 +39,7 @@ if (publishToMaven) {
         publications {
             create<MavenPublication>("maven") {
                 from(components["java"])
-                artifactId = "AndroidJunkCode"
+                artifactId = "GarbageCode"
             }
         }
     }
@@ -64,7 +64,7 @@ if (publishToMaven) {
         publications {
             create<MavenPublication>("maven") {
                 from(components["java"])
-                artifactId = "AndroidJunkCode"
+                artifactId = "GarbageCode"
             }
         }
     }

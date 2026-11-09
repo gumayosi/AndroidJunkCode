@@ -26,6 +26,7 @@ dependencyResolutionManagement {
 
 rootProject.name = "AndroidJunkCode"
 if (gradle.startParameter.projectProperties["jitpack"] == "true") {
+    rootProject.name = "GarbageCode"
     rootProject.projectDir = file("library")
 } else {
     include(":library")
