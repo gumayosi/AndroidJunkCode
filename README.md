@@ -2,6 +2,8 @@
 
 此插件用于做马甲包时，减小马甲包与主包的代码相似度，避免被某些应用市场识别为马甲包。
 
+其他工程接入请看 [docs/INTEGRATION_GUIDE.md](docs/INTEGRATION_GUIDE.md)。当前坐标是 `com.github.gumayosi:GarbageCode:v2.0.5`，插件 id 是 `garbage-code`。
+
 使用方法见[wiki](https://github.com/qq549631030/AndroidJunkCode/wiki)
 
 使用插件[methodCount](https://github.com/KeepSafe/dexcount-gradle-plugin)对比
