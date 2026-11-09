@@ -26,4 +26,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "AndroidJunkCode"
 include(":library")
-include(":app")
+if (gradle.startParameter.projectProperties["jitpack"] != "true") {
+    include(":app")
+}

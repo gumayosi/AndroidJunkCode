@@ -25,8 +25,13 @@ if (publishToMaven) {
     }
 } else {
     pluginManager.apply("com.gradle.plugin-publish")
-    group = libraryProperty("GROUP").get()
-    version = libraryProperty("VERSION_NAME").get()
+    val publishedVersion = providers.gradleProperty("version").orNull
+        ?.takeIf { it.isNotBlank() && it != "unspecified" }
+        ?: libraryProperty("VERSION_NAME").get()
+    group = providers.gradleProperty("group").orNull
+        ?.takeIf { it.isNotBlank() }
+        ?: libraryProperty("GROUP").get()
+    version = publishedVersion
     configure<GradlePluginDevelopmentExtension> {
         website.set(libraryProperty("POM_URL"))
         vcsUrl.set(libraryProperty("POM_SCM_URL"))
@@ -44,7 +49,7 @@ if (publishToMaven) {
         publications {
             create<MavenPublication>("maven") {
                 from(components["java"])
-                artifactId = libraryProperty("POM_ARTIFACT_ID").get()
+                artifactId = "AndroidJunkCode"
             }
         }
     }
