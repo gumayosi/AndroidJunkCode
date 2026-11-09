@@ -5,6 +5,8 @@ import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.mavemPublish) apply false
+    alias(libs.plugins.pluginPublish) apply false
     id("maven-publish")
 }
 
@@ -17,20 +19,33 @@ fun libraryProperty(name: String) = providers.provider {
 }
 
 val publishToMaven = libraryProperties.getProperty("publishToMaven")?.toBoolean() == true
+val jitpack = providers.gradleProperty("jitpack").orNull == "true"
+val publishedVersion = providers.gradleProperty("version").orNull
+    ?.takeIf { it.isNotBlank() && it != "unspecified" }
+    ?: libraryProperty("VERSION_NAME").get()
+val publishedGroup = providers.gradleProperty("group").orNull
+    ?.takeIf { it.isNotBlank() }
+    ?: libraryProperty("GROUP").get()
 
 if (publishToMaven) {
     pluginManager.apply("com.vanniktech.maven.publish")
     configure<MavenPublishBaseExtension> {
         publishToMavenCentral()
     }
+} else if (jitpack) {
+    group = publishedGroup
+    version = publishedVersion
+    publishing {
+        publications {
+            create<MavenPublication>("maven") {
+                from(components["java"])
+                artifactId = "AndroidJunkCode"
+            }
+        }
+    }
 } else {
     pluginManager.apply("com.gradle.plugin-publish")
-    val publishedVersion = providers.gradleProperty("version").orNull
-        ?.takeIf { it.isNotBlank() && it != "unspecified" }
-        ?: libraryProperty("VERSION_NAME").get()
-    group = providers.gradleProperty("group").orNull
-        ?.takeIf { it.isNotBlank() }
-        ?: libraryProperty("GROUP").get()
+    group = publishedGroup
     version = publishedVersion
     configure<GradlePluginDevelopmentExtension> {
         website.set(libraryProperty("POM_URL"))
