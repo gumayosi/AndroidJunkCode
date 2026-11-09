@@ -1,0 +1,71 @@
+import com.vanniktech.maven.publish.MavenPublishBaseExtension
+import org.gradle.api.publish.maven.MavenPublication
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
+
+plugins {
+    alias(libs.plugins.kotlin.jvm)
+    id("maven-publish")
+}
+
+val libraryProperties = Properties().apply {
+    project.layout.projectDirectory.file("gradle.properties").asFile.inputStream().use(::load)
+}
+
+fun libraryProperty(name: String) = providers.provider {
+    libraryProperties.getProperty(name) ?: error("Missing library gradle property '$name'")
+}
+
+val publishToMaven = libraryProperties.getProperty("publishToMaven")?.toBoolean() == true
+
+if (publishToMaven) {
+    pluginManager.apply("com.vanniktech.maven.publish")
+    configure<MavenPublishBaseExtension> {
+        publishToMavenCentral()
+    }
+} else {
+    pluginManager.apply("com.gradle.plugin-publish")
+    group = libraryProperty("GROUP").get()
+    version = libraryProperty("VERSION_NAME").get()
+    configure<GradlePluginDevelopmentExtension> {
+        website.set(libraryProperty("POM_URL"))
+        vcsUrl.set(libraryProperty("POM_SCM_URL"))
+        plugins {
+            create("androidJunkCode") {
+                id = "io.github.qq549631030.android-junk-code"
+                implementationClass = "cn.hx.plugin.junkcode.plugin.AndroidJunkCodePlugin"
+                displayName = "AndroidJunkCode plugin"
+                description = libraryProperty("POM_DESCRIPTION").get()
+                tags.set(listOf("android", "generate", "junk", "code"))
+            }
+        }
+    }
+    publishing {
+        publications {
+            create<MavenPublication>("maven") {
+                from(components["java"])
+                artifactId = libraryProperty("POM_ARTIFACT_ID").get()
+            }
+        }
+    }
+}
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(21))
+    }
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_11)
+    }
+}
+
+dependencies {
+    compileOnly(gradleApi())
+    compileOnly(libs.android.gradlePlugin.api)
+    implementation(libs.javapoet)
+}

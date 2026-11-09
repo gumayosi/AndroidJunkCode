@@ -1,0 +1,39 @@
+[versions]
+agp = "9.5.1"
+javapoet = "1.13.0"
+# @pin 最低支持AGP版本
+gradleApi = "7.4.0"
+kotlin = "2.4.21"
+coreKtx = "1.19.1"
+junit = "4.13.2"
+junitVersion = "1.3.0"
+espressoCore = "3.7.0"
+appcompat = "1.8.0"
+material = "1.14.0"
+activity = "1.13.0"
+constraintlayout = "2.2.1"
+junkCode = "2.0.1"
+dexcount = "4.0.0"
+mavemPublish = "0.37.0"
+pluginPublish = "2.2.1"
+
+[libraries]
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+android-gradlePlugin-api = { group = "com.android.tools.build", name = "gradle-api", version.ref = "gradleApi" }
+javapoet = { module = "com.squareup:javapoet", version.ref = "javapoet" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
+androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+android-junk-code = { id = "io.github.qq549631030.android-junk-code", version.ref = "junkCode" }
+dexcount = { id = "com.getkeepsafe.dexcount", version.ref = "dexcount" }
+mavemPublish = { id = "com.vanniktech.maven.publish", version.ref = "mavemPublish" }
+pluginPublish = { id = "com.gradle.plugin-publish", version.ref = "pluginPublish" }
